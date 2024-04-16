@@ -6,6 +6,7 @@ from builtins import str
 import logging
 
 from PIL import Image
+from PIL import __version__ as PIL_version
 import PIL.ImageOps, PIL.ImageChops
 
 from brother_ql.raster import BrotherQLRaster
@@ -110,7 +111,7 @@ def convert(qlr, images, label,  **kwargs):
                 im = im.resize((im.size[0]//2, im.size[1]))
             if im.size[0] != dots_printable[0]:
                 hsize = int((dots_printable[0] / im.size[0]) * im.size[1])
-                im = im.resize((dots_printable[0], hsize), Image.ANTIALIAS)
+                im = im.resize((dots_printable[0], hsize), Image.ANTIALIAS if int(PIL_version.split('.')[0]) < 10 else Image.LANCZOS)
                 logger.warning('Need to resize the image...')
             if im.size[0] < device_pixel_width:
                 new_im = Image.new(im.mode, (device_pixel_width, im.size[1]), (255,)*len(im.mode))
